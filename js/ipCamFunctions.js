@@ -74,6 +74,7 @@ var camWebApi = {
      },
      
      xmlParser : function(xmlText){
+         debugger;
          if (window.DOMParser)
             {
                 parser=new DOMParser();
@@ -90,7 +91,13 @@ var camWebApi = {
           
                 user0 = xmlDoc.getElementsByTagName("user0")[0].childNodes[0].nodeValue,
                 password0 = xmlDoc.getElementsByTagName("password0")[0].childNodes[0].nodeValue,
+                user1 = xmlDoc.getElementsByTagName("user1")[0].childNodes[0].nodeValue,
+                password1 = xmlDoc.getElementsByTagName("password1")[0].childNodes[0].nodeValue,
+                user2 = xmlDoc.getElementsByTagName("user2")[0].childNodes[0].nodeValue,
+                password2 = xmlDoc.getElementsByTagName("password2")[0].childNodes[0].nodeValue,
             }
+            
+            return xmlObj;
      }
 	 
 	 
