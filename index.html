@@ -13,6 +13,7 @@
 		<link rel="stylesheet" href="/css/spinners.css" type="text/css">
 		<script src="/js/jquery-impromptu.js" type="text/javascript"></script>
 		<script src="/js/ipCamFunctions.js" type="text/javascript"></script>
+        <script src="/js/reqWebApi.js" type="text/javascript"></script>
 		<script type="text/javascript">
         
 			var recordsViewModel = function(){
@@ -29,10 +30,11 @@
                 }
                 
 				self.diskDataFromPhp = function(){
+                    debugger;
 					self.diskData('');
 					var data = {};
 					data.action = 'diskData'
-					$.ajax({
+					/*$.ajax({
 						url: "ajax_handler.php",
 						type: "POST",
 						data: data,
@@ -42,7 +44,11 @@
 						error: function(err){
 							console.log(err);
 						} 
-					});
+					});*/
+                    var asyncWrapperObj = asyncWrapper.ajaxWrap(data);
+                    if(typeof asyncWrapperObj !== 'undefined'){
+                         self.diskData(asyncWrapperObj.value)
+                    }
 				}
                 
                 self.diskTotalFromPhp = function(){
