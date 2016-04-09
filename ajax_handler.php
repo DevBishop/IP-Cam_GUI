@@ -26,11 +26,8 @@
 					echo json_encode($filesManager->filesCount());
 					break;
 				case 'diskData':
-					echo $filesManager->diskFreeSpace();
+					echo $filesManager->diskManager();
 					break;
-                case 'diskTotal':
-                    echo $filesManager->diskTotalCapacity();
-                    break;
                 case 'convert':
                     $vFileName = json_decode($_POST['fileName']);
                     echo $filesManager->videoConverter($vFileName);

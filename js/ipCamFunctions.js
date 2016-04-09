@@ -2,24 +2,23 @@
 var camWebApi = {
 	
 	 webApiUrl : function(){
-		 return "http://192.168.1.238:88/cgi-bin/CGIProxy.fcgi?";
+		 return "http://10.0.1.182:88/cgi-bin/CGIProxy.fcgi?";
 	 },
-     
 	 //0:admin, 1:operator, 2:viewer
 	 userCredentialsByType : function(typeOfUser){
 		 switch(typeOfUser){
+			case 0:
+			 	return {user : "matteo", password : "!Sup3rEntropic0"}; //admin
 			case 1:
-				return {user : "matteoo", password : "matteoo"}; //operator
+				return {user : "matteoo", password : "matteoo1"}; //operator
 			case 2:
-				return {user : "matteov", password : "matteov"}; //viewer
+				return {user : "matteov", password : "matteov1"}; //viewer
 			default:
 				return {};
 		 }
 	 },
-     
 	 //https://css-tricks.com/snippets/javascript/javascript-keycodes/
 	 requiredActionFromKeyCode : function(e){
-         debugger;
 			switch(e.keyCode) {
 			case 37:
 				return "Left"
@@ -29,8 +28,7 @@ var camWebApi = {
 				return "Right"
 			case 40: 
 				return "Down"
-			default: 
-            return; 
+			default: return; 
 		 }
 	 },
 	 
@@ -54,46 +52,23 @@ var camWebApi = {
 				this.requiredActionFromKeyCode(e) + "&usr=" + 
 				this.userCredentialsByType(1).user + "&pwd=" +
 		 		this.userCredentialsByType(1).password; 
-				$.getJSON(url, function(data){});
+				  
+				/*$.getJSON(url, function(data){
+					$.prompt(data);
+				});*/
 				 break;
 			 case "Stop":
 				url = this.webApiUrl() + "cmd=ptzStopRun" + 
 				this.requiredActionFromKeyCode(e) + "&usr=" + 
 				this.userCredentialsByType(1).user + "&pwd=" +
-		 		this.userCredentialsByType(1).password;
-				$.getJSON(url, function(data){});
+		 		this.userCredentialsByType(1).password; 
+				  
+				/*$.getJSON(url, function(data){
+					$.prompt(data);
+				});*/
 				break;
 		 }
 	 },
-     buildWebApiStopRunUrl : function(){
-                this.webApiUrl() + "cmd=ptzStopRun" + 
-				this.requiredActionFromKeyCode(e) + "&usr=" + 
-				this.userCredentialsByType(1).user + "&pwd=" +
-		 		this.userCredentialsByType(1).password;
-          
-				$.getJSON(url, function(data){});
-     },
-     
-     xmlParser : function(xmlText){
-         if (window.DOMParser)
-            {
-                parser=new DOMParser();
-                xmlDoc=parser.parseFromString(xmlText,"text/xml");
-            }
-            else // Internet Explorer
-            {
-                xmlDoc=new ActiveXObject("Microsoft.XMLDOM");
-                xmlDoc.async=false;
-                xmlDoc.loadXML(txt);
-            }
-            
-            var xmlObj = {
-          
-                user0 = xmlDoc.getElementsByTagName("user0")[0].childNodes[0].nodeValue,
-                password0 = xmlDoc.getElementsByTagName("password0")[0].childNodes[0].nodeValue,
-            }
-     }
-	 
 	 
 	
 }

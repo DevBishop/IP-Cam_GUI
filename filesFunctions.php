@@ -26,32 +26,38 @@ class FilesManager{
 	public function fileList($order){
 		return scandir($this->recordsPath(), $order);
 	}
-
-	function getSymbolByQuantity($size){
+	
+	/*public function setRecordsPermission(){
+		$count = 0;
+        foreach($this->fileList(1) as $file){
+            if(chmod($this->recordsPath().$file, 0777)){
+            //if(chown($this->recordsPath().$file, 'www-data')){
+                $count++;
+            }
+        }
+        return $count;
+	}
+    
+    public function setRecordsPermission(){
+		shell_exec("chmod g+x -R /mnt/hdd/FTP/FI9828W_00626E55DA86/record\n");
+    }*/
+	
+	public function diskManager(){
+		$directory = $this->recordsPath();
+		$io = popen ( '/usr/bin/du -sk ' . $directory, 'r' );
+		$size = fgets ( $io, 4096);
+		$size = substr ( $size, 0, strpos ( $size, "\t" ) );
+		pclose ( $io );
 		if($size<1024000){
-			$size = round($size/1024000);
+			$size = round($size/1024);
 			$size .= ' MB';
 		}
 		else{
-			$size = round($size/1024000000);
+			$size = round($size/1024000);
 			$size .= ' GB';
 		}
 		return $size;
 	}
-    
-    public function diskFreeSpace(){
-        return $this->getSymbolByQuantity(disk_total_space($this->recordsPath())-disk_free_space($this->recordsPath()));
-    }
-    
-    public function diskTotalCapacity(){
-         return $this->getSymbolByQuantity(disk_total_space($this->recordsPath()));
-    }
-    
-   /*function getSymbolByQuantity($bytes) {
-        $symbols = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
-        $exp = floor(log($bytes)/log(1024));
-        return sprintf('%.2f '.$symbol[$exp], ($bytes/pow(1024, floor($exp))));
-    }*/
 	
 	public function filesDropper($filesArray){
 		$count = 0;
