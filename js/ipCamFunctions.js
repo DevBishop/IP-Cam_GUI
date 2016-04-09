@@ -17,7 +17,6 @@ var camWebApi = {
 		 }
 	 },
      
-	 //https://css-tricks.com/snippets/javascript/javascript-keycodes/
 	 requiredActionFromKeyCode : function(e){
          debugger;
 			switch(e.keyCode) {
