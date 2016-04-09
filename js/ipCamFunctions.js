@@ -7,8 +7,6 @@ var camWebApi = {
 	 //0:admin, 1:operator, 2:viewer
 	 userCredentialsByType : function(typeOfUser){
 		 switch(typeOfUser){
-			case 0:
-			 	return {user : "matteo", password : "!Sup3rEntropic0"}; //admin
 			case 1:
 				return {user : "matteoo", password : "matteoo1"}; //operator
 			case 2:
