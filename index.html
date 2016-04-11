@@ -34,7 +34,7 @@
 					self.diskData('');
 					var data = {};
 					data.action = 'diskData'
-					/*$.ajax({
+					$.ajax({
 						url: "ajax_handler.php",
 						type: "POST",
 						data: data,
@@ -44,11 +44,11 @@
 						error: function(err){
 							console.log(err);
 						} 
-					});*/
-                    var asyncWrapperObj = asyncWrapper.ajaxWrap(data);
+					});
+                    /*var asyncWrapperObj = asyncWrapper.ajaxWrap(data);
                     if(typeof asyncWrapperObj !== 'undefined'){
                          self.diskData(asyncWrapperObj.value)
-                    }
+                    }*/
 				}
                 
                 self.diskTotalFromPhp = function(){
