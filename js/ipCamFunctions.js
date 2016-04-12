@@ -16,13 +16,15 @@ var camWebApi = {
     requiredActionFromKeyCode : function(e){
             switch(e.keyCode) {
             case 37:
-                return "Left"
+                return "ptzMoveLeft"
             case 38: 
-                return "Up"
+                return "ptzMoveUp"
             case 39: 
-                return "Right"
+                return "ptzMoveRight"
             case 40: 
-                return "Down"
+                return "ptzMoveDown"
+            case 32:
+                return "ptzStopRun"    
             default: 
             return; 
         }
@@ -40,31 +42,17 @@ var camWebApi = {
         }
     },
     
-    buildWebApiGetFromKeyCodeAction : function(action, e){
+    buildWebApiGetFromKeyCodeAction : function(action,e){
         var url = "";
         switch (action) {
             case "Move":
-                url = this.webApiUrl() + "cmd=ptzMove" + 
+                url = this.webApiUrl() + "cmd=" + 
                 this.requiredActionFromKeyCode(e) + "&usr=" + 
                 this.userCredentialsByType(1).user + "&pwd=" +
                 this.userCredentialsByType(1).password; 
-                $.getJSON(url, function(data){});
-                break;
-            case "Stop":
-                url = this.webApiUrl() + "cmd=ptzStopRun" + 
-                this.requiredActionFromKeyCode(e) + "&usr=" + 
-                this.userCredentialsByType(1).user + "&pwd=" +
-                this.userCredentialsByType(1).password;
-                $.getJSON(url, function(data){});
+                $.get(url);
                 break;
         }
-    },
-    buildWebApiStopRunUrl : function(){
-        this.webApiUrl() + "cmd=ptzStopRun" + 
-        this.requiredActionFromKeyCode(e) + "&usr=" + 
-        this.userCredentialsByType(1).user + "&pwd=" +
-        this.userCredentialsByType(1).password;
-        $.getJSON(url, function(data){});
     },
     
     xmlFileGetter : function(xmlFile){

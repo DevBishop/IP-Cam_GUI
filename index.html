@@ -30,7 +30,6 @@
                 }
                 
 				self.diskDataFromPhp = function(){
-                    debugger;
 					self.diskData('');
 					var data = {};
 					data.action = 'diskData'
@@ -347,14 +346,11 @@
                 }
             });
             
-            /*$(document).keydown(function(e) {
+            $(document).keydown(function(e) {
                     camWebApi.buildWebApiGetFromKeyCodeAction('Move', e);
                     e.preventDefault(); // prevent the default action (scroll / move caret)
                 });
-            $(document).keyup(function(e) {
-                    camWebApi.buildWebApiStopRunUrl();
-                    e.preventDefault(); // prevent the default action (scroll / move caret)
-                });*/
+
 		</script>
 		<title>Foscam IP Cam Dropper - Alpha</title>
 	</head>
