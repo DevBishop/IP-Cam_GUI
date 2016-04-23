@@ -1,8 +1,5 @@
 <config>
-<<<<<<< HEAD
     <recordsPath>/mnt/hdd/FTP/FI9900P_00626E63C3FB/record/</recordsPath>
-=======
-    <recordsPath>/mnt/hdd/FTP/FI9828W_00626E55DA86/record/</recordsPath>
     <credentials>
         <user0>matteo</user0>
         <password0>*****</password0>
@@ -12,10 +9,9 @@
         <password2>matteov</password2>
     </credentials>
     <ipCamUrl>
-        <url>http://192.168.1.238:88</url>
+        <url>http://10.0.1.182:88</url>
     </ipCamUrl>
     <ipCamParams>
-        <ipCamModelName>FI9828W</ipCamModelName>
+        <ipCamModelName>FI9900P</ipCamModelName>
     </ipCamParams>
->>>>>>> caltrano_version
 </config>
