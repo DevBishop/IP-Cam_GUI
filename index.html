@@ -13,7 +13,9 @@
 		<link rel="stylesheet" href="/css/spinners.css" type="text/css">
 		<script src="/js/jquery-impromptu.js" type="text/javascript"></script>
 		<script src="/js/ipCamFunctions.js" type="text/javascript"></script>
+        <script src="/js/reqWebApi.js" type="text/javascript"></script>
 		<script type="text/javascript">
+        
 			var recordsViewModel = function(){
 				var self = this;
 	
@@ -41,6 +43,10 @@
 							console.log(err);
 						} 
 					});
+                    /*var asyncWrapperObj = asyncWrapper.ajaxWrap(data);
+                    if(typeof asyncWrapperObj !== 'undefined'){
+                         self.diskData(asyncWrapperObj.value)
+                    }*/
 				}
 				
 				self.setPermission = function(){
@@ -337,6 +343,12 @@
                     $('.toolsContainer').removeClass('fixed');
                 }
             });
+			
+            $(document).keydown(function(e) {
+                    camWebApi.buildWebApiGetFromKeyCodeAction('Move', e);
+                    e.preventDefault(); // prevent the default action (scroll / move caret)
+                });
+
 		</script>
 		<title>Foscam IP Cam Dropper - Alpha</title>
 	</head>
