@@ -12,6 +12,10 @@ var camWebApi = {
     userCredentialsByType : function(typeOfUser){
         return this.xmlParser('credentials', typeOfUser);
     },
+	
+	ipCameraModelName : function(){
+		return this.xmlParser('ipCamParams',0).ipCamModelName;	
+	},
     
     requiredActionFromKeyCode : function(e){
             switch(e.keyCode) {
@@ -43,6 +47,10 @@ var camWebApi = {
     },
     
     buildWebApiGetFromKeyCodeAction : function(action,e){
+		if(this.ipCameraModelName() !== 'FI9828W'){
+			$.prompt('Questo modello di ipCam non &egrave; motorizzato')
+			return;
+		}
         var url = "";
         switch (action) {
             case "Move":
@@ -88,6 +96,10 @@ var camWebApi = {
                 return urlObj = {
                     url : pNode[0].getElementsByTagName("url")[0].childNodes[0].nodeValue
                 } 
+			case "ipCamParams":
+				return obj = {
+					ipCamModelName : pNode[0].getElementsByTagName("ipCamModelName")[0].childNodes[0].nodeValue
+				}
             default:
                 return "";
         }   
