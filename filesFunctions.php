@@ -26,38 +26,25 @@ class FilesManager{
 	public function fileList($order){
 		return scandir($this->recordsPath(), $order);
 	}
-	
-	/*public function setRecordsPermission(){
-		$count = 0;
-        foreach($this->fileList(1) as $file){
-            if(chmod($this->recordsPath().$file, 0777)){
-            //if(chown($this->recordsPath().$file, 'www-data')){
-                $count++;
-            }
-        }
-        return $count;
-	}
     
-    public function setRecordsPermission(){
-		shell_exec("chmod g+x -R /mnt/hdd/FTP/FI9828W_00626E55DA86/record\n");
-    }*/
-	
-	public function diskManager(){
-		$directory = $this->recordsPath();
-		$io = popen ( '/usr/bin/du -sk ' . $directory, 'r' );
-		$size = fgets ( $io, 4096);
-		$size = substr ( $size, 0, strpos ( $size, "\t" ) );
-		pclose ( $io );
-		if($size<1024000){
-			$size = round($size/1024);
-			$size .= ' MB';
-		}
-		else{
-			$size = round($size/1024000);
-			$size .= ' GB';
-		}
-		return $size;
-	}
+    public function diskFreeSpace(){
+        return $this->getSymbolByQuantity(disk_total_space($this->recordsPath())-disk_free_space($this->recordsPath()));
+    }
+    
+    public function diskTotalCapacity(){
+         return $this->getSymbolByQuantity(disk_total_space($this->recordsPath()));
+    }
+    
+   private function getSymbolByQuantity($Bytes) {
+        $Type = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');;
+        $Index=0;
+        while($Bytes>=1024)
+        {
+            $Bytes/=1024;
+            $Index++;
+        }
+        return sprintf('%1.2f' ,"".$Bytes)." ".$Type[$Index];
+    }
 	
 	public function filesDropper($filesArray){
 		$count = 0;
