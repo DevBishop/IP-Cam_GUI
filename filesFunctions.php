@@ -26,18 +26,6 @@ class FilesManager{
 	public function fileList($order){
 		return scandir($this->recordsPath(), $order);
 	}
-
-	function getSymbolByQuantity($size){
-		if($size<1024000){
-			$size = round($size/1024000);
-			$size .= ' MB';
-		}
-		else{
-			$size = round($size/1024000000);
-			$size .= ' GB';
-		}
-		return $size;
-	}
     
     public function diskFreeSpace(){
         return $this->getSymbolByQuantity(disk_total_space($this->recordsPath())-disk_free_space($this->recordsPath()));
@@ -47,11 +35,16 @@ class FilesManager{
          return $this->getSymbolByQuantity(disk_total_space($this->recordsPath()));
     }
     
-   /*function getSymbolByQuantity($bytes) {
-        $symbols = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');
-        $exp = floor(log($bytes)/log(1024));
-        return sprintf('%.2f '.$symbol[$exp], ($bytes/pow(1024, floor($exp))));
-    }*/
+   private function getSymbolByQuantity($Bytes) {
+        $Type = array('B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB');;
+        $Index=0;
+        while($Bytes>=1024)
+        {
+            $Bytes/=1024;
+            $Index++;
+        }
+        return sprintf('%1.2f' ,"".$Bytes)." ".$Type[$Index];
+    }
 	
 	public function filesDropper($filesArray){
 		$count = 0;
