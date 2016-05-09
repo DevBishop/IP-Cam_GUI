@@ -7,7 +7,7 @@ class FilesManager{
     }
 
     public function filesCount(){
-		
+		$this->returnIp();//chiamata a scopo di log
 		$directory = $this->recordsPath();
 		
         $files = glob($directory . "*.{mkv,mp4}", GLOB_BRACE);
@@ -22,6 +22,32 @@ class FilesManager{
         }
      
 	}
+    
+    function logger($parameter){
+        $myFile = date("Ymd")."_log.log";
+		$fh = fopen($myFile, 'a') or die("can't open file");
+        $txt = date('l jS \of F Y h:i:s A')." -- [IP -> ".$parameter."]";
+		fwrite($fh, $txt ."\n");
+		fclose($fh);
+    }
+    
+    public function returnIp(){
+        
+        if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
+        {
+            $ip=$_SERVER['HTTP_CLIENT_IP'];
+        }
+        elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))   //to check ip is pass from proxy
+        {
+            $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+        else
+        {
+            $ip=$_SERVER['REMOTE_ADDR'];
+        }
+        $this->logger($ip);
+        return $ip;
+    }
 	
 	public function fileList($order){
 		return scandir($this->recordsPath(), $order);

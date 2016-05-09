@@ -299,7 +299,25 @@
 				self.retrieveFilesList();
 			};
 			
+			function returnIp(){
+				var data = {} 
+				data.action='returnIp'
+				 $.ajax({
+						url: "ajax_handler.php",
+						type: "POST",
+						data: data,
+						success: function(res) {
+						if(res.indexOf("10.0.1.") > -1){
+							return 'local'
+						}
+							
+					}
+				
+				});
+			}
+			
 			function toolsVm(){
+				returnIp();
 				self = this;
                 self.imgSrc = ko.observable();
 				var snapUrl = camWebApi.buildWebApiGetFromGenericRequest("snapPicture2", 2);

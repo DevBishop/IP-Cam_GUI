@@ -92,6 +92,7 @@ var camWebApi = {
                     user : pNode[0].getElementsByTagName("user" + typeOfUser)[0].childNodes[0].nodeValue,
                     password : pNode[0].getElementsByTagName("password" + typeOfUser)[0].childNodes[0].nodeValue,
                 }
+            case "ipCamExternal":
             case "ipCamUrl":
                 return urlObj = {
                     url : pNode[0].getElementsByTagName("url")[0].childNodes[0].nodeValue

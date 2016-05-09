@@ -35,6 +35,9 @@
                     $vFileName = json_decode($_POST['fileName']);
                     echo $filesManager->videoConverter($vFileName);
                     break;
+				case 'returnIp':
+					echo json_encode($filesManager->returnIp());
+					break;
 			}
 		}
 		catch(Exception $e){
