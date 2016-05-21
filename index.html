@@ -310,6 +310,9 @@
 						if(res.indexOf("10.0.1.") > -1){
 							return 'local'
 						}
+						else{
+							return 'external'
+						}
 							
 					}
 				
@@ -317,10 +320,10 @@
 			}
 			
 			function toolsVm(){
-				returnIp();
+				var returnUserLocation = returnIp();
 				self = this;
                 self.imgSrc = ko.observable();
-				var snapUrl = camWebApi.buildWebApiGetFromGenericRequest("snapPicture2", 2);
+				var snapUrl = camWebApi.buildWebApiGetFromGenericRequest("snapPicture2", 2, 'local');
 				self.imgSrc(snapUrl+new Date().getTime());
 				self.clock = function () {
 					self.imgSrc(snapUrl+new Date().getTime());
@@ -331,18 +334,16 @@
 			}
             
             function isBound(id){
-                  return !!ko.dataFor(document.getElementById(id));
+                  return ko.dataFor(document.getElementById(id));
             }
             
-			$(function(){
-				ko.applyBindings(new recordsViewModel, document.getElementById("recordsView"));
-			});
+			
 			
 			function toolsVmBinding(){
 				$('#recordsView').hide();
 				$('#toolsVm').show();
-				$('#first').removeClass('active');
-				$('#second').addClass('active');
+				$('#second').removeClass('active');
+				$('#first').addClass('active');
                 
                 if(!isBound("toolsVm")){
 				    ko.applyBindings(new toolsVm, document.getElementById("toolsVm"));
@@ -350,10 +351,14 @@
 			}
 			
 			function bindGridVm(){
-				$('#recordsView').show();
 				$('#toolsVm').hide();
-				$('#first').addClass('active');
-				$('#second').removeClass('active');
+				$('#recordsView').show();
+				$('#second').addClass('active');
+				$('#first').removeClass('active');
+				
+				if(!isBound("recordsView")){
+					ko.applyBindings(new recordsViewModel, document.getElementById("recordsView"));
+				}
 			}
 
             $(window).bind('scroll', function () {
@@ -369,6 +374,9 @@
                     e.preventDefault(); // prevent the default action (scroll / move caret)
                 });
 
+			$(function(){
+				toolsVmBinding();
+			});
 		</script>
 		<title>Foscam IP Cam Dropper - Alpha</title>
 	</head>
@@ -376,8 +384,9 @@
 	<body>
 		<div id="cssmenu">
 			<ul>
-				<li class="active" id="first"><a href="#" onclick="bindGridVm()">File Manager</a></li>
-				<li id="second"><a href='#' onclick="toolsVmBinding()">Camera</a></li>
+				
+				<li class="active" id="first"><a href='#' onclick="toolsVmBinding()">Camera</a></li>
+				<li id="second"><a href="#" onclick="bindGridVm()">File Manager</a></li>
 			</ul>
 		</div>
 			<div class="cont-fluid" id="recordsView">

@@ -1,8 +1,15 @@
 
 var camWebApi = {
     
-    webApiUrl : function(){
-        return this.xmlParser('ipCamUrl', 0).url + "/cgi-bin/CGIProxy.fcgi?";
+    webApiUrl : function(userLocation){
+        var linkConstants = '/cgi-bin/CGIProxy.fcgi?';
+        switch(userLocation){
+            case 'local':
+                return this.xmlParser('ipCamUrl', 0).url + linkConstants;
+            case 'external':
+                return this.xmlParser('ipCamExternalUrl', 0).url + linkConstants;
+        }
+        
     },
     
     xmlFilePath : function(){
@@ -34,11 +41,11 @@ var camWebApi = {
         }
     },
     
-    buildWebApiGetFromGenericRequest : function(action, typeOfUser){
+    buildWebApiGetFromGenericRequest : function(action, typeOfUser, userLocation){
         var url = "";
         switch(action){
             case "snapPicture2":
-                url = this.webApiUrl() + "cmd=" + 
+                url = this.webApiUrl(userLocation) + "cmd=" + 
                 action + "&usr=" + 
                 this.userCredentialsByType(typeOfUser).user + "&pwd=" +
                 this.userCredentialsByType(typeOfUser).password + "&"; 
@@ -91,16 +98,16 @@ var camWebApi = {
                 return credentialsObj = {
                     user : pNode[0].getElementsByTagName("user" + typeOfUser)[0].childNodes[0].nodeValue,
                     password : pNode[0].getElementsByTagName("password" + typeOfUser)[0].childNodes[0].nodeValue,
-                }
-            case "ipCamExternal":
+                };
+            case "ipCamExternalUrl":
             case "ipCamUrl":
                 return urlObj = {
                     url : pNode[0].getElementsByTagName("url")[0].childNodes[0].nodeValue
-                } 
+                };
 			case "ipCamParams":
 				return obj = {
 					ipCamModelName : pNode[0].getElementsByTagName("ipCamModelName")[0].childNodes[0].nodeValue
-				}
+				};
             default:
                 return "";
         }   
