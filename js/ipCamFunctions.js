@@ -15,7 +15,7 @@ var camWebApi = {
     xmlFilePath : function(){
         return '/../config.xml';
     },
-    //0:admin, 1:operator, 2:viewer
+    
     userCredentialsByType : function(typeOfUser){
         return this.xmlParser('credentials', typeOfUser);
     },

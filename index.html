@@ -303,21 +303,17 @@
 				var data = {} 
 				data.action='returnIp'
 				 $.ajax({
-						url: "ajax_handler.php",
-						type: "POST",
-						data: data,
-						success: function(res) {
-						if(res.indexOf("10.0.1.") > -1){
-							return 'local'
-						}
-						else{
-							return 'external'
-						}
+					url: "ajax_handler.php",
+					type: "POST",
+					data: data,
+					success: function(res) {
+						debugger;
+						var r = $.parseJSON(res)
 							
 					}
 				
 				});
-			}
+			};
 			
 			function toolsVm(){
 				var returnUserLocation = returnIp();
@@ -331,14 +327,12 @@
 				$("#snap").load(function() {
 					self.clock()
 				});
-			}
+			};
             
             function isBound(id){
                   return ko.dataFor(document.getElementById(id));
             }
             
-			
-			
 			function toolsVmBinding(){
 				$('#recordsView').hide();
 				$('#toolsVm').show();
@@ -348,9 +342,11 @@
                 if(!isBound("toolsVm")){
 				    ko.applyBindings(new toolsVm, document.getElementById("toolsVm"));
                 }
-			}
+			};
 			
 			function bindGridVm(){
+				var element = $('#toolsVm')[0]; 
+				ko.cleanNode(element);
 				$('#toolsVm').hide();
 				$('#recordsView').show();
 				$('#second').addClass('active');
@@ -359,7 +355,7 @@
 				if(!isBound("recordsView")){
 					ko.applyBindings(new recordsViewModel, document.getElementById("recordsView"));
 				}
-			}
+			};
 
             $(window).bind('scroll', function () {
                 if ($(window).scrollTop() > 52) {
@@ -371,8 +367,8 @@
             
             $(document).keydown(function(e) {
                     camWebApi.buildWebApiGetFromKeyCodeAction('Move', e);
-                    e.preventDefault(); // prevent the default action (scroll / move caret)
-                });
+                    e.preventDefault(); 
+			});
 
 			$(function(){
 				toolsVmBinding();

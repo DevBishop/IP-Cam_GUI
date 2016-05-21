@@ -36,7 +36,7 @@
                     echo $filesManager->videoConverter($vFileName);
                     break;
 				case 'returnIp':
-					echo json_encode($filesManager->returnIp());
+					echo json_encode($filesManager->returnUserLocationArray());
 					break;
 			}
 		}

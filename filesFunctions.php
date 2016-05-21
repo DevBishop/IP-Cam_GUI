@@ -31,7 +31,9 @@ class FilesManager{
 		fclose($fh);
     }
     
-    public function returnIp(){
+    public function returnUserLocationArray(){
+        
+        $localUser = false;
         
         if (!empty($_SERVER['HTTP_CLIENT_IP']))   //check ip from share internet
         {
@@ -43,10 +45,16 @@ class FilesManager{
         }
         else
         {
+            $localUser = true;
             $ip=$_SERVER['REMOTE_ADDR'];
         }
         $this->logger($ip);
-        return $ip;
+        
+        $userLocationArray = [
+            "ip" => $ip,
+            "isLocal" => $localUser,
+        ];
+        return $userLocationArray;
     }
 	
 	public function fileList($order){
