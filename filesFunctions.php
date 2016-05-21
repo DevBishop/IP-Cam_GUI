@@ -7,7 +7,7 @@ class FilesManager{
     }
 
     public function filesCount(){
-		$this->returnIp();//chiamata a scopo di log
+		$this->returnUserLocationArray();//chiamata a scopo di log
 		$directory = $this->recordsPath();
 		
         $files = glob($directory . "*.{mkv,mp4}", GLOB_BRACE);
@@ -23,7 +23,7 @@ class FilesManager{
      
 	}
     
-    function logger($parameter, $localUser){
+    private function logger($parameter, $localUser){
         $myFile = date("Ymd")."_log.log";
 		$fh = fopen($myFile, 'a') or die("can't open file");
         $txt = date('l jS \of F Y h:i:s A')." -- [IP -> ".$parameter."] -- [IsLocal -> ".$localUser."]";

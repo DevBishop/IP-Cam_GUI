@@ -54,10 +54,15 @@ var camWebApi = {
     },
     
     buildWebApiGetFromKeyCodeAction : function(action,e){
+        
+        if($.inArray(e.keyCode, [37, 38, 39, 40, 32]) === -1){
+            return;
+        }
 		if(this.ipCameraModelName() !== 'FI9828W'){
 			$.prompt('Questo modello di ipCam non &egrave; motorizzato')
 			return;
 		}
+        
         var url = "";
         switch (action) {
             case "Move":
