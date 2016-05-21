@@ -23,10 +23,10 @@ class FilesManager{
      
 	}
     
-    function logger($parameter){
+    function logger($parameter, $localUser){
         $myFile = date("Ymd")."_log.log";
 		$fh = fopen($myFile, 'a') or die("can't open file");
-        $txt = date('l jS \of F Y h:i:s A')." -- [IP -> ".$parameter."]";
+        $txt = date('l jS \of F Y h:i:s A')." -- [IP -> ".$parameter."] -- [IsLocal -> ".$localUser."]";
 		fwrite($fh, $txt ."\n");
 		fclose($fh);
     }
@@ -48,7 +48,7 @@ class FilesManager{
             $localUser = true;
             $ip=$_SERVER['REMOTE_ADDR'];
         }
-        $this->logger($ip);
+        $this->logger($ip, $localUser);
         
         $userLocationArray = [
             "ip" => $ip,
