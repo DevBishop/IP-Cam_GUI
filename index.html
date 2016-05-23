@@ -89,7 +89,8 @@
 					var newObjArray = new Array();
 					
 					for (var i = 0; i < arr.length; ++i){
-						if(arr[i].indexOf("alarm_") > -1 || arr[i].indexOf("MDalarm_") > -1){
+						if(arr[i].indexOf("alarm_") > -1 
+						|| arr[i].indexOf("MDalarm_") > -1){
 							var newRecordsObj = new Object();
 							newRecordsObj.id = i + 1;
 							newRecordsObj.fileName = ko.observable(arr[i]);
@@ -299,27 +300,11 @@
 				self.retrieveFilesList();
 			};
 			
-			function returnIp(){
-				var data = {} 
-				data.action='returnIp'
-				 $.ajax({
-					url: "ajax_handler.php",
-					type: "POST",
-					data: data,
-					success: function(res) {
-						debugger;
-						var r = $.parseJSON(res)
-							
-					}
-				
-				});
-			};
 			
-			function toolsVm(){
-				var returnUserLocation = returnIp();
+			function toolVm(isLocal){
 				self = this;
                 self.imgSrc = ko.observable();
-				var snapUrl = camWebApi.buildWebApiGetFromGenericRequest("snapPicture2", 2, 'local');
+				var snapUrl = camWebApi.buildWebApiGetFromGenericRequest("snapPicture2", 2, isLocal);
 				self.imgSrc(snapUrl+new Date().getTime());
 				self.clock = function () {
 					self.imgSrc(snapUrl+new Date().getTime());
@@ -327,7 +312,7 @@
 				$("#snap").load(function() {
 					self.clock()
 				});
-			};
+			}
             
             function isBound(id){
                   return ko.dataFor(document.getElementById(id));
@@ -338,10 +323,22 @@
 				$('#toolsVm').show();
 				$('#second').removeClass('active');
 				$('#first').addClass('active');
+                var data = {} 
+				data.action='returnIp'
+				 $.ajax({
+					url: "ajax_handler.php",
+					type: "POST",
+					data: data,
+					success: function(res) {
+						debugger;
+						var isLocal = $.parseJSON(res).isLocal;
+						if(!isBound("toolsVm")){
+							ko.applyBindings(new toolVm(isLocal), document.getElementById("toolsVm"));
+						}
+					}
+				
+				});
                 
-                if(!isBound("toolsVm")){
-				    ko.applyBindings(new toolsVm, document.getElementById("toolsVm"));
-                }
 			};
 			
 			function bindGridVm(){
@@ -378,6 +375,9 @@
 	</head>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	<body>
+		<div id="userBar">
+			<a href="#">Benvenuto ospite</a>
+		</div>
 		<div id="cssmenu">
 			<ul>
 				

@@ -1,11 +1,30 @@
 <?php
 class FilesManager{
 
+    private function configFilePath(){
+        return simplexml_load_file('config.xml');
+    }
+    
     private function recordsPath(){
-        $path = simplexml_load_file('config.xml');
+        $path = $this->configFilePath();
         return $path->recordsPath;
     }
-
+    
+    private function accountsFilePath(){
+        $path = $this->configFilePath();
+        return $path->accountsFilePath;
+    }
+    
+    public function accountByName(){
+        
+        //$xml=simplexml_load_file($this->accountsFilePath());
+        return 'merda';
+        /*oreach($xml->children() as $user) { 
+            return $user->user['id'];
+        }*/
+        
+    }
+    
     public function filesCount(){
 		$this->returnUserLocationArray();//chiamata a scopo di log
 		$directory = $this->recordsPath();

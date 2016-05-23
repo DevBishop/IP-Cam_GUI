@@ -1,13 +1,13 @@
 
 var camWebApi = {
     
-    webApiUrl : function(userLocation){
+    webApiUrl : function(hasLocalIP){
         var linkConstants = '/cgi-bin/CGIProxy.fcgi?';
-        switch(userLocation){
-            case 'local':
-                return this.xmlParser('ipCamUrl', 0).url + linkConstants;
-            case 'external':
-                return this.xmlParser('ipCamExternalUrl', 0).url + linkConstants;
+        if(hasLocalIP){
+            return this.xmlParser('ipCamUrl', 0).url + linkConstants;
+        }
+        else{
+            return this.xmlParser('ipCamExternalUrl', 0).url + linkConstants;
         }
         
     },
@@ -41,11 +41,11 @@ var camWebApi = {
         }
     },
     
-    buildWebApiGetFromGenericRequest : function(action, typeOfUser, userLocation){
+    buildWebApiGetFromGenericRequest : function(action, typeOfUser, hasLocalIP){
         var url = "";
         switch(action){
             case "snapPicture2":
-                url = this.webApiUrl(userLocation) + "cmd=" + 
+                url = this.webApiUrl(hasLocalIP) + "cmd=" + 
                 action + "&usr=" + 
                 this.userCredentialsByType(typeOfUser).user + "&pwd=" +
                 this.userCredentialsByType(typeOfUser).password + "&"; 
