@@ -254,6 +254,7 @@
 				}
                 
                 self.videoConverter = function(rowVm){
+					debugger;
                     if(rowVm.fileName().indexOf(".mkv") > -1){
                         
                         rowVm.isDrillDownVisible(true)
@@ -267,8 +268,7 @@
                                     success: function(res) {
                                         rowVm.isDrillDownVisible(false);
                                         self.openVideoPrompt(res);
-                                        rowVm.fileName(res)
-										//self.updateView();
+										rowVm.fileName(res);
                                     }
                             
                         });
