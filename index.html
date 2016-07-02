@@ -267,7 +267,8 @@
                                     success: function(res) {
                                         rowVm.isDrillDownVisible(false);
                                         self.openVideoPrompt(res);
-                                        self.updateView();
+                                        rowVm.fileName(res)
+										//self.updateView();
                                     }
                             
                         });

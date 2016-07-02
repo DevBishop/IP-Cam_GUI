@@ -1,0 +1,25 @@
+<script type="text/javascript">
+
+function callApi(){
+    debugger;
+        var data = {};
+        data.table = 'users';
+        data.id = 1;
+        $.ajax({
+            url: "http://www.recidivo.net/API/index.php",
+            type: "GET",
+            data: data,
+            success: function(res) {
+                debugger;
+                var r = res;
+            },
+            error: function(err){
+                var e = err;
+            } 
+        });
+                    
+}
+
+</script>
+
+<input type="submit" onclick="callApi()">yooooo</input>

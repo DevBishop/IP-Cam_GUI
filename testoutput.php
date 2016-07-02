@@ -1,8 +1,9 @@
 <?php
-require_once('filesFunctions.php');
+
+    require_once('filesFunctions.php');
 
     $filesManager = new FilesManager();
     
-    $filesManager->accountByName();
+    echo $filesManager->accountByName();
     
 ?>

@@ -16,13 +16,17 @@ class FilesManager{
     }
     
     public function accountByName(){
-        
-        //$xml=simplexml_load_file($this->accountsFilePath());
-        return 'merda';
-        /*oreach($xml->children() as $user) { 
-            return $user->user['id'];
-        }*/
-        
+       
+       $filePath = $this->accountsFilePath();
+       $xml=simplexml_load_file($filePath);
+       
+       return $xml;
+       
+       
+       /*foreach($xml->user as $user) { 
+            return $user['id'];
+       }
+        */
     }
     
     public function filesCount(){
