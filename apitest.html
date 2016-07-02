@@ -1,0 +1,29 @@
+<script src="http://code.jquery.com/jquery-latest.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script type="text/javascript">
+
+function callApi(){
+    debugger;
+        var data = {};
+        data.action = 'login';
+        data.user = 'matteo';
+        data.password = 'matteo';
+        $.ajax({
+            data: data,
+            dataType: 'jsonp',
+            url: "http://www.recidivo.net/login/uc_handler.php",
+            type: "GET",
+            success: function(res) {
+                debugger;
+                var r = JSON.parse(res);
+            },
+            error: function(err){
+                var e = err;
+            } 
+        });
+                    
+}
+
+</script>
+
+<input type="submit" onclick="callApi()"></input>

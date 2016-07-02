@@ -22,7 +22,8 @@
 				self.records = ko.observableArray();
 				self.diskData = ko.observable();
 				self.fileCount = ko.observable();
-                self.isDrillDownVisible = ko.observable()
+                self.isDrillDownVisible = ko.observable();
+                self.diskTotal = ko.observable();
                 
 				self.documentUrl = function(){
                     return document.URL.replace('#', '');
@@ -48,22 +49,24 @@
                          self.diskData(asyncWrapperObj.value)
                     }*/
 				}
-				
-				self.setPermission = function(){
+                
+                self.diskTotalFromPhp = function(){
+					self.diskTotal('');
 					var data = {};
-					data.action = 'setPermission'
+					data.action = 'diskTotal'
 					$.ajax({
 						url: "ajax_handler.php",
 						type: "POST",
 						data: data,
 						success: function(res) {
+							self.diskTotal(res);
 						},
 						error: function(err){
 							console.log(err);
 						} 
 					});
 				}
-				
+
 				self.filesCountAction = function(){
 					self.fileCount(0);
 					var data = {};
@@ -86,12 +89,13 @@
 					var newObjArray = new Array();
 					
 					for (var i = 0; i < arr.length; ++i){
-						if(arr[i].indexOf("MDalarm_") > -1){
+						if(arr[i].indexOf("alarm_") > -1 
+						|| arr[i].indexOf("MDalarm_") > -1){
 							var newRecordsObj = new Object();
 							newRecordsObj.id = i + 1;
 							newRecordsObj.fileName = ko.observable(arr[i]);
 							newRecordsObj.url = ko.observable(self.documentUrl() + "record/" + arr[i]);
-							var notValidDate = arr[i].replace("MDalarm_", "").replace(".mkv", "").replace(".mp4", "");
+							var notValidDate = arr[i].replace("MDalarm_", "").replace("alarm_", "").replace(".mkv", "").replace(".mp4", "");
 							newRecordsObj.fileDate = self.buildValidDate(notValidDate);
                             newRecordsObj.checkDelete = false;
                             newRecordsObj.isDrillDownVisible = ko.observable(false);
@@ -121,7 +125,6 @@
 				}
 								
 				self.buildValidDate = function(notValidDate){
-                    moment.locale()
 					var year = notValidDate.substr(0,4);
 					var day = notValidDate.substr(4,2);
 					var month = notValidDate.substr(6,2);
@@ -137,9 +140,9 @@
 					$('.spinnerContainer').toggle();
 					self.records([]);
 					self.retrieveFilesList();
-					//self.setPermission();
 					self.filesCountAction();
 					self.diskDataFromPhp();
+                    self.diskTotalFromPhp()
 				}
 				
 				self.asyncDrop = function(dateArr){
@@ -251,6 +254,7 @@
 				}
                 
                 self.videoConverter = function(rowVm){
+					debugger;
                     if(rowVm.fileName().indexOf(".mkv") > -1){
                         
                         rowVm.isDrillDownVisible(true)
@@ -264,7 +268,7 @@
                                     success: function(res) {
                                         rowVm.isDrillDownVisible(false);
                                         self.openVideoPrompt(res);
-                                        self.updateView();
+										rowVm.fileName(res);
                                     }
                             
                         });
@@ -291,16 +295,17 @@
 					self.buildDeleteParameters(vm);		
 				}
 				
-				//self.setPermission();
 				self.filesCountAction();
 				self.diskDataFromPhp();
+                self.diskTotalFromPhp();
 				self.retrieveFilesList();
 			};
 			
-			function toolsVm(){
+			
+			function toolVm(isLocal){
 				self = this;
                 self.imgSrc = ko.observable();
-				var snapUrl = camWebApi.buildWebApiGetFromGenericRequest("snapPicture2", 2);
+				var snapUrl = camWebApi.buildWebApiGetFromGenericRequest("snapPicture2", 2, isLocal);
 				self.imgSrc(snapUrl+new Date().getTime());
 				self.clock = function () {
 					self.imgSrc(snapUrl+new Date().getTime());
@@ -311,30 +316,44 @@
 			}
             
             function isBound(id){
-                  return !!ko.dataFor(document.getElementById(id));
+                  return ko.dataFor(document.getElementById(id));
             }
             
-			$(function(){
-				ko.applyBindings(new recordsViewModel, document.getElementById("recordsView"));
-			});
-			
 			function toolsVmBinding(){
 				$('#recordsView').hide();
 				$('#toolsVm').show();
-				$('#first').removeClass('active');
-				$('#second').addClass('active');
+				$('#second').removeClass('active');
+				$('#first').addClass('active');
+                var data = {} 
+				data.action='returnIp'
+				 $.ajax({
+					url: "ajax_handler.php",
+					type: "POST",
+					data: data,
+					success: function(res) {
+						debugger;
+						var isLocal = $.parseJSON(res).isLocal;
+						if(!isBound("toolsVm")){
+							ko.applyBindings(new toolVm(isLocal), document.getElementById("toolsVm"));
+						}
+					}
+				
+				});
                 
-                if(!isBound("toolsVm")){
-				    ko.applyBindings(new toolsVm, document.getElementById("toolsVm"));
-                }
-			}
+			};
 			
 			function bindGridVm(){
-				$('#recordsView').show();
+				var element = $('#toolsVm')[0]; 
+				ko.cleanNode(element);
 				$('#toolsVm').hide();
-				$('#first').addClass('active');
-				$('#second').removeClass('active');
-			}
+				$('#recordsView').show();
+				$('#second').addClass('active');
+				$('#first').removeClass('active');
+				
+				if(!isBound("recordsView")){
+					ko.applyBindings(new recordsViewModel, document.getElementById("recordsView"));
+				}
+			};
 
             $(window).bind('scroll', function () {
                 if ($(window).scrollTop() > 52) {
@@ -343,21 +362,28 @@
                     $('.toolsContainer').removeClass('fixed');
                 }
             });
-			
+            
             $(document).keydown(function(e) {
                     camWebApi.buildWebApiGetFromKeyCodeAction('Move', e);
-                    e.preventDefault(); // prevent the default action (scroll / move caret)
-                });
+                    e.preventDefault(); 
+			});
 
+			$(function(){
+				toolsVmBinding();
+			});
 		</script>
 		<title>Foscam IP Cam Dropper - Alpha</title>
 	</head>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 	<body>
+		<div id="userBar">
+			<a href="#">Benvenuto ospite</a>
+		</div>
 		<div id="cssmenu">
 			<ul>
-				<li class="active" id="first"><a href="#" onclick="bindGridVm()">File Manager</a></li>
-				<li id="second"><a href='#' onclick="toolsVmBinding()">Camera</a></li>
+				
+				<li class="active" id="first"><a href='#' onclick="toolsVmBinding()">Camera</a></li>
+				<li id="second"><a href="#" onclick="bindGridVm()">File Manager</a></li>
 			</ul>
 		</div>
 			<div class="cont-fluid" id="recordsView">
@@ -393,8 +419,8 @@
 					</table>
 				</div>
                 </section>
-				<div class="noRows"><span style="margin-left:50px">CI SONO</span> <b><span data-bind="text:fileCount"></span>
-                </b> REGISTRAZIONI PER UN TOTALE DI <b><span data-bind="text:diskData"></span></b> SU <b>1 TB</b> UTILIZZATI.</b></div>
+				<div class="noRows"><span style="margin-left:50px">CI SONO</span> <span class="evidence" data-bind="text:fileCount"></span>
+                 REGISTRAZIONI PER UN TOTALE DI <span class="evidence" data-bind="text:diskData"></span> UTILIZZATI SU <span class="evidence" data-bind="text:diskTotal"></span>  TOTALI.</div>
 					<div class="tableContainer">
 					<table class="table">
 						<thead>

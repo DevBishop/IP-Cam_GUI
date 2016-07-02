@@ -1,18 +1,25 @@
 
 var camWebApi = {
     
-    webApiUrl : function(){
-        return this.xmlParser('ipCamUrl', 0).url + "/cgi-bin/CGIProxy.fcgi?";
+    webApiUrl : function(hasLocalIP){
+        var linkConstants = '/cgi-bin/CGIProxy.fcgi?';
+        if(hasLocalIP){
+            return this.xmlParser('ipCamUrl', 0).url + linkConstants;
+        }
+        else{
+            return this.xmlParser('ipCamExternalUrl', 0).url + linkConstants;
+        }
+        
     },
     
     xmlFilePath : function(){
         return '/../config.xml';
     },
-    //0:admin, 1:operator, 2:viewer
+    
     userCredentialsByType : function(typeOfUser){
         return this.xmlParser('credentials', typeOfUser);
     },
-
+	
 	ipCameraModelName : function(){
 		return this.xmlParser('ipCamParams',0).ipCamModelName;	
 	},
@@ -34,11 +41,11 @@ var camWebApi = {
         }
     },
     
-    buildWebApiGetFromGenericRequest : function(action, typeOfUser){
+    buildWebApiGetFromGenericRequest : function(action, typeOfUser, hasLocalIP){
         var url = "";
         switch(action){
             case "snapPicture2":
-                url = this.webApiUrl() + "cmd=" + 
+                url = this.webApiUrl(hasLocalIP) + "cmd=" + 
                 action + "&usr=" + 
                 this.userCredentialsByType(typeOfUser).user + "&pwd=" +
                 this.userCredentialsByType(typeOfUser).password + "&"; 
@@ -47,10 +54,15 @@ var camWebApi = {
     },
     
     buildWebApiGetFromKeyCodeAction : function(action,e){
+        
+        if($.inArray(e.keyCode, [37, 38, 39, 40, 32]) === -1){
+            return;
+        }
 		if(this.ipCameraModelName() !== 'FI9828W'){
 			$.prompt('Questo modello di ipCam non &egrave; motorizzato')
 			return;
 		}
+        
         var url = "";
         switch (action) {
             case "Move":
@@ -91,15 +103,16 @@ var camWebApi = {
                 return credentialsObj = {
                     user : pNode[0].getElementsByTagName("user" + typeOfUser)[0].childNodes[0].nodeValue,
                     password : pNode[0].getElementsByTagName("password" + typeOfUser)[0].childNodes[0].nodeValue,
-                }
+                };
+            case "ipCamExternalUrl":
             case "ipCamUrl":
                 return urlObj = {
                     url : pNode[0].getElementsByTagName("url")[0].childNodes[0].nodeValue
-                } 
+                };
 			case "ipCamParams":
 				return obj = {
 					ipCamModelName : pNode[0].getElementsByTagName("ipCamModelName")[0].childNodes[0].nodeValue
-				}
+				};
             default:
                 return "";
         }   
